@@ -34,9 +34,10 @@ render.experimental.xml
 # Mac OS
 .DS_Store
 
-# Keystore files
+# Keystore files and properties
 *.jks
 *.keystore
+keystore.properties
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
