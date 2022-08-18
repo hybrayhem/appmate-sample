@@ -49,10 +49,22 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    flavorDimensions 'services'
+    productFlavors {
+        gms {
+            dimension 'services'
+            // Default flavor
+        }
+        hms {
+            dimension 'services'
+            applicationIdSuffix '.HUAWEI'
+        }
+    }
 }
 
 dependencies {
     implementation 'com.huawei.appmate:iap:1.1.11'
+    implementation 'com.huawei.agconnect:agconnect-core:1.6.0.300'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.2.0'
