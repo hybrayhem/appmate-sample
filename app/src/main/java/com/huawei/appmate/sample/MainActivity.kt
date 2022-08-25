@@ -16,10 +16,8 @@ class MainActivity : AppCompatActivity() {
 
         val storeAccessText: TextView = findViewById(R.id.textStoreAccess)
         getUserId(storeAccessText)
+        getProducts()
 
-        storeAccessText.setOnClickListener {
-            getUserId(storeAccessText)
-        }
     }
 
     // Check SDK availability by getting User ID
@@ -52,6 +50,20 @@ class MainActivity : AppCompatActivity() {
                     0
                 )
                 textView.text = resources.getString(R.string.sdk_unavailable)
+            }
+        })
+    }
+
+    // Get products from store
+    private fun getProducts() {
+        PurchaseClient.instance.getProducts(object :
+            ReceivedDataListener<List<Product>, GenericError> {
+            override fun onSucceeded(data: List<Product>) {
+                Log.d("AppmateSample", "Get products succeed ${data.map { it.productId }}")
+            }
+
+            override fun onError(error: GenericError) {
+                Log.d("AppmateSample", "Unable to get products: ${error.errorMessage}")
             }
         })
     }
