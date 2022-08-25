@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Appmate Sample</string>
+    <string name="sdk_unavailable">The SDK is unavailable.</string>
+    <string name="sdk_available">The SDK is available.</string>
 </resources>
