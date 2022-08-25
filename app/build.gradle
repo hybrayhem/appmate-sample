@@ -63,7 +63,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.huawei.appmate:iap:1.1.13'
+    implementation 'com.huawei.appmate:iap:1.1.13.19'
     implementation 'com.huawei.agconnect:agconnect-core:1.6.0.300'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
