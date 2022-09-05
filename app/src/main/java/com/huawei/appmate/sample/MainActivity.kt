@@ -4,19 +4,35 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.huawei.appmate.PurchaseClient
 import com.huawei.appmate.callback.ReceivedDataListener
 import com.huawei.appmate.model.*
+import com.huawei.appmate.sample.ui.ProductsAdapter
 
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val storeAccessText: TextView = findViewById(R.id.textStoreAccess)
         getUserId(storeAccessText)
-        getProducts()
+
+        // Set recycler view for product list
+        val rvProducts = findViewById<RecyclerView>(R.id.recyclerViewProducts)
+        val productList = ArrayList<Product>()
+        val rvAdapter = ProductsAdapter(productList)
+        rvProducts.adapter = rvAdapter
+        rvProducts.layoutManager = LinearLayoutManager(this)
+
+        val rvSize = rvAdapter.itemCount
+        getProducts { list ->
+            productList.addAll(list as ArrayList<Product>)
+            rvAdapter.notifyItemRangeChanged(rvSize, productList.size)
+        }
 
     }
 
@@ -55,11 +71,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Get products from store
-    private fun getProducts() {
+    private fun getProducts(callback: (List<Product>) -> Unit) {
         PurchaseClient.instance.getProducts(object :
             ReceivedDataListener<List<Product>, GenericError> {
             override fun onSucceeded(data: List<Product>) {
                 Log.d("AppmateSample", "Get products succeed ${data.map { it.productId }}")
+                callback(data)
             }
 
             override fun onError(error: GenericError) {
