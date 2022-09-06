@@ -1,5 +1,6 @@
 package com.huawei.appmate.sample
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         // Set recycler view for product list
         val rvProducts = findViewById<RecyclerView>(R.id.recyclerViewProducts)
         val productList = ArrayList<Product>()
-        val rvAdapter = ProductsAdapter(productList)
+        val rvAdapter = ProductsAdapter(productList, this)
         rvProducts.adapter = rvAdapter
         rvProducts.layoutManager = LinearLayoutManager(this)
 
@@ -83,5 +84,13 @@ class MainActivity : AppCompatActivity() {
                 Log.d("AppmateSample", "Unable to get products: ${error.errorMessage}")
             }
         })
+    }
+
+    // For product purchase
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQ_CODE_BUY) {
+            PurchaseClient.instance.getResultListener().onActivityResult(data)
+        }
     }
 }
