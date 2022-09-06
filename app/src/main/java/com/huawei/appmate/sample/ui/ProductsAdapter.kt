@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.Purchase
-import com.huawei.appmate.PurchaseClient
-import com.huawei.appmate.callback.PurchaseResultListener
 import com.huawei.appmate.model.*
 import com.huawei.appmate.sample.R
 
-class ProductsAdapter(private val productList: List<Product>, private var activity: Activity) :
+class ProductsAdapter(
+    private val productList: ArrayList<Product>,
+    private val purchaseCallback: (Product) -> Unit
+) :
     RecyclerView.Adapter<ProductsAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -35,7 +34,7 @@ class ProductsAdapter(private val productList: List<Product>, private var activi
 
         holder.purchaseButton.text = productList[position].price
         holder.purchaseButton.setOnClickListener {
-            purchaseProduct(productList[position])
+            purchaseCallback(productList[position])
         }
     }
 
@@ -43,35 +42,9 @@ class ProductsAdapter(private val productList: List<Product>, private var activi
         return productList.size
     }
 
-    private fun purchaseProduct(product: Product) {
-        PurchaseClient.instance.purchase(
-            activity = activity,
-            purchaseRequest = PurchaseRequest(product.productId, product.productType),
-            listener = object : PurchaseResultListener<PurchaseResultInfo, GenericError> {
-                override fun onSuccess(data: PurchaseResultInfo) {
-                    Log.d("AppmateSample", "Purchase succeed '${product.productId}': $data")
-                }
-
-                override fun onError(error: GenericError) {
-                    Log.d(
-                        "AppmateSample",
-                        "Unable to purchase '${product.productId}': ${error.errorMessage}"
-                    )
-                }
-
-                override fun onQueryPurchasesResponse(
-                    p0: BillingResult,
-                    p1: MutableList<Purchase>
-                ) {
-                    Log.d(
-                        "AppmateSample",
-                        "Query Purchases Response: " +
-                                "Product = ${product.productId},\n" +
-                                "p0 = $p0,\n " +
-                                "p1 = $p1,\n"
-                    )
-                }
-            }
-        )
+    fun setProductList(list: List<Product>) {
+        productList.clear()
+        productList.addAll(list)
     }
+
 }

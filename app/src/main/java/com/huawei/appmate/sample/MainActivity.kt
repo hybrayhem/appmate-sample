@@ -7,7 +7,10 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
 import com.huawei.appmate.PurchaseClient
+import com.huawei.appmate.callback.PurchaseResultListener
 import com.huawei.appmate.callback.ReceivedDataListener
 import com.huawei.appmate.model.*
 import com.huawei.appmate.sample.ui.ProductsAdapter
@@ -25,16 +28,14 @@ class MainActivity : AppCompatActivity() {
         // Set recycler view for product list
         val rvProducts = findViewById<RecyclerView>(R.id.recyclerViewProducts)
         val productList = ArrayList<Product>()
-        val rvAdapter = ProductsAdapter(productList, this)
+        val rvAdapter = ProductsAdapter(productList, ::purchaseProduct)
         rvProducts.adapter = rvAdapter
         rvProducts.layoutManager = LinearLayoutManager(this)
 
-        val rvSize = rvAdapter.itemCount
         getProducts { list ->
-            productList.addAll(list as ArrayList<Product>)
-            rvAdapter.notifyItemRangeChanged(rvSize, productList.size)
+            rvAdapter.setProductList(list)
+            rvAdapter.notifyItemInserted(productList.size - 1)
         }
-
     }
 
     // Check SDK availability by getting User ID
@@ -84,6 +85,38 @@ class MainActivity : AppCompatActivity() {
                 Log.d("AppmateSample", "Unable to get products: ${error.errorMessage}")
             }
         })
+    }
+
+    private fun purchaseProduct(product: Product) {
+        PurchaseClient.instance.purchase(
+            activity = this,
+            purchaseRequest = PurchaseRequest(product.productId, product.productType),
+            listener = object : PurchaseResultListener<PurchaseResultInfo, GenericError> {
+                override fun onSuccess(data: PurchaseResultInfo) {
+                    Log.d("AppmateSample", "Purchase succeed '${product.productId}': $data")
+                }
+
+                override fun onError(error: GenericError) {
+                    Log.d(
+                        "AppmateSample",
+                        "Unable to purchase '${product.productId}': ${error.errorMessage}"
+                    )
+                }
+
+                override fun onQueryPurchasesResponse(
+                    p0: BillingResult,
+                    p1: MutableList<Purchase>
+                ) {
+                    Log.d(
+                        "AppmateSample",
+                        "Query Purchases Response: " +
+                                "Product = ${product.productId},\n" +
+                                "p0 = $p0,\n " +
+                                "p1 = $p1,\n"
+                    )
+                }
+            }
+        )
     }
 
     // For product purchase
