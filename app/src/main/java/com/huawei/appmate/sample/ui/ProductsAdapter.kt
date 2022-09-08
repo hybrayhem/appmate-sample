@@ -1,7 +1,6 @@
 package com.huawei.appmate.sample.ui
 
-import android.app.Activity
-import android.util.Log
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,8 @@ import com.huawei.appmate.sample.R
 
 class ProductsAdapter(
     private val productList: ArrayList<Product>,
-    private val purchaseCallback: (Product) -> Unit
+    private val purchaseCallback: (Product) -> Unit,
+    private val purchaseList: ArrayList<PurchaseInfo>
 ) :
     RecyclerView.Adapter<ProductsAdapter.ViewHolder>() {
 
@@ -35,6 +35,10 @@ class ProductsAdapter(
         holder.purchaseButton.text = productList[position].price
         holder.purchaseButton.setOnClickListener {
             purchaseCallback(productList[position])
+        }
+
+        if(productList[position].productId == "sample_nonconsumable" && purchaseList.any { it.productId == "sample_nonconsumable" }) {
+            holder.purchaseButton.setBackgroundColor(Color.GRAY)
         }
     }
 

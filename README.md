@@ -1,0 +1,1 @@
+# appmate-android-sample
