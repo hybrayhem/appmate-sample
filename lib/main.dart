@@ -1,4 +1,6 @@
+// import 'package:appmate_flutter/PurchaseClient.dart';
 import 'package:flutter/material.dart';
+import 'package:sample/api/properties.dart';
 
 void main() {
   runApp(const AppmateSample());
@@ -30,7 +32,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _items = 0;
-  bool storeAccess = true;
+  bool sdkAccess = true;
   bool isNonConsumablePurchased = false;
   Map<String, bool> isSubscriptionPurchased = {
     "BRONZE": false,
@@ -77,6 +79,18 @@ class _HomePageState extends State<HomePage> {
         isSubscriptionPurchased.addAll({title: true});
       }
     });
+  }
+
+  void _checkSDK() {
+    // PurchaseClient.getUserId().then((String value) {
+    //   setState(() {
+    //     sdkAccess = value.isNotEmpty;
+    //   });
+    //
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //     content: Text("User ID: $value"),
+    //   ));
+    // });
   }
 
   Widget _liveRow(int filled, int total) {
@@ -142,6 +156,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // PurchaseClient.setApiKey(Properties.APPMATE_KEY);
+    _checkSDK();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -180,8 +201,8 @@ class _HomePageState extends State<HomePage> {
 
                 // Store connection status
                 ListTile(
-                  title: const Text("Store access"),
-                  trailing: storeAccess
+                  title: const Text("SDK access"),
+                  trailing: sdkAccess
                       ? const Icon(
                           Icons.check_circle,
                           color: Colors.green,
@@ -249,9 +270,7 @@ class _HomePageState extends State<HomePage> {
                           child: _subscriptionBoard("SILVER", "\$9.99"),
                         ),
                         Expanded(
-                          child: Card(
-                            child: _subscriptionBoard("GOLD", "\$12.99"),
-                          ),
+                          child: _subscriptionBoard("GOLD", "\$12.99"),
                         ),
                       ],
                     )
