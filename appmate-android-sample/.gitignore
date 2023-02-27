@@ -1,0 +1,55 @@
+# Built application files
+*.apk
+*.ap_
+*.aab
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+/local.properties
+local.properties
+
+# Log/OS Files
+*.log
+
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+output.json
+
+# IntelliJ
+*.iml
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+
+# VS Code
+.vscode/
+
+# Mac OS
+.DS_Store
+
+# Keystore files and properties
+*.jks
+*.keystore
+keystore.properties
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Huawei Mobile Services
+agconnect-services.json
+
+# API configuration file
+api.properties
+
+# Android Profiling
+*.hprof
+
+# Replacement of .externalNativeBuild directories introduced with Android Studio 3.5
+gen-external-apklibs

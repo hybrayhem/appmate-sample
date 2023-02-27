@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Appmate Sample</string>
+    <string name="sdk_unavailable">The SDK is unavailable.</string>
+    <string name="sdk_available">The SDK is available.</string>
+    <string name="spend">Spend</string>
+    <string name="purchased_items">Purchased items</string>
+</resources>

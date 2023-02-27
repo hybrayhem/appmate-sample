@@ -1,0 +1,78 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+apply plugin: 'com.huawei.agconnect'  // HUAWEI agconnect Gradle plugin
+
+// Load Keystore information
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
+
+// Load API information
+def apiProperties = new Properties()
+apiProperties.load(new FileInputStream(rootProject.file("api.properties")))
+
+android {
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+    compileSdkVersion 31
+
+    defaultConfig {
+        applicationId "com.huawei.appmate.sample"
+        minSdkVersion 19
+        targetSdkVersion 31
+        versionCode 1200
+        versionName "0.1.2"
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "APPMATE_KEY", apiProperties['APPMATE_KEY']
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    flavorDimensions 'services'
+    productFlavors {
+        gms {
+            dimension 'services'
+            // Default flavor
+        }
+        hms {
+            dimension 'services'
+            applicationIdSuffix '.HUAWEI'
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.huawei.appmate:iap:1.1.13.20'
+    implementation 'com.huawei.agconnect:agconnect-core:1.6.0.300'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}
